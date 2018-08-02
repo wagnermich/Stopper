@@ -1,17 +1,16 @@
 package at.michael.stopper.views.main;
 
-import java.io.IOException;
-
+import at.michael.stopper.handler.Inject;
+import at.michael.stopper.services.GUIService;
 import at.michael.stopper.views.blatt.BlattPresenter;
 import at.michael.stopper.views.blatt.BlattView;
 import at.michael.stopper.views.slot.SlotPresenter;
 import at.michael.stopper.views.slot.SlotView;
 import at.michael.stopper.views.stoppung.StoppungPresenter;
 import at.michael.stopper.views.stoppung.StoppungView;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -19,11 +18,16 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebView;
 
 
 public class MainPresenter {
 
+	@Inject
+	GUIService guiService;
+	
 	@FXML private AnchorPane baseAnchor;
 
     @FXML private VBox vBox;
@@ -92,12 +96,17 @@ public class MainPresenter {
 		aktuellerTab=tab;
 	}
 	
+	
+	/**
+	 * get new Tab by File!!!!!!!! selection model kann so nicht funktieren!!!!!
+	 */
+	
    private void addNewTab() {
 	  
 	   	blattView=new BlattView();
 		blattPresenter =(BlattPresenter) blattView.getPresenter();
 		blattPresenter.injectMainPresenter(this);
-		tabPane.getTabs().add(1,blattPresenter.getNewTab(tabCounter++));
+		tabPane.getTabs().add(1,blattPresenter.getNewTab(tabCounter++)); 
 		blattPresenter.setClosePolicy(tabPane,true); // Woher bist du? add = true delete = false
 		tabPane.getSelectionModel().select(1);
    		
@@ -111,26 +120,38 @@ public class MainPresenter {
    void newStop() {
 	   SlotView view=new SlotView();
 	   SlotPresenter presenter =(SlotPresenter) view.getPresenter();
-	   AnchorPane anchor=new AnchorPane();
-	   anchor.setId("newView");
-	   anchor.getChildren().add(view.getView());
-	   HBox hbox=(HBox)stoppungPresenter.getAnchor();
-	   hbox.getChildren().add(anchor);
-	   System.out.println("binde: "+anchor.getId()+" an: "+hbox.getId());
+	   TabPane tempPane=guiService.getAktuellerTabPane();
+	   //AnchorPane anchor=new AnchorPane();
+	   //anchor.setId("newView");
+	   //anchor.getChildren().add(view.getView());
+	   //HBox hbox=(HBox)stoppungPresenter.getAnchor();
+	   Tab tempTab=tempPane.getSelectionModel().getSelectedItem();
+	   //tempTab.setContent(view.getView());
+	   if(tempTab!=null)
+		   ;//System.out.println(((Pane) tempTab.getContent()).getChildren().get(0));
+	   System.out.println(((WebView) tempTab.getContent()));
+	   
+	   //for(Node node : ((AnchorPane) tempTab.getContent()).getChildren())
+		//   System.out.println(node);
+	   
+	   //hbox.getChildren().add(anchor);
+	   //System.out.println("binde: "+anchor.getId()+" an: "+hbox.getId());
+	   
    }
     
 	
 	@FXML private void initialize() {
+		
 		stoppungView = new StoppungView();
         stoppungPresenter = (StoppungPresenter) stoppungView.getPresenter();
-        stoppungPresenter.injectMainPresenter(this);
-    
-        addNewTab();
+        //stoppungPresenter.injectMainPresenter(this);
         
+        addNewTab();
+        guiService=GUIService.getInstance();
+        guiService.setAktuellerTabPane(tabPane);
         bindAnchors();
 		addTab.setOnSelectionChanged(e->{if(addTab.isSelected()) {addNewTab();}});//new TabRequester //Bug Key Select löst aus
-		tabPane.getSelectionModel().select(1);//blatt1 Select
-		
+		//tabPane.getSelectionModel().select(1);//blatt1 Select
 		
 		//verankern(stoppungView.getView());//Verankern in dieser Dimension
 		/*

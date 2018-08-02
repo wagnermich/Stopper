@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import at.michael.stopper.handler.Inject;
+import at.michael.stopper.services.GUIService;
 import at.michael.stopper.views.main.MainPresenter;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -14,9 +16,14 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.AnchorPane;
 
 public class BlattPresenter implements Initializable{
 
+	
+	@Inject
+	GUIService guiService;
+	
 	 @FXML
 	 private Tab blatt;
 	 
@@ -61,7 +68,8 @@ public class BlattPresenter implements Initializable{
 	    }
 
 	    @FXML private void tabSelected() {
-	    	System.out.println(mainPresenter.getAnchorTab());
+	    	
+	    	zeige();
 	    	//tabPane=;
 	    	//mainPresenter.setAktuellerTab(tabPane.getSelectionModel().getSelectedItem());
 	    	
@@ -79,11 +87,21 @@ public class BlattPresenter implements Initializable{
 	    public void injectMainPresenter(MainPresenter main) {
 	    	this.mainPresenter=main;
 	    }
-	 
+	 public void zeige() {
+		 if(guiService.getAktuellerTabPane()!=null) {
+			 TabPane pane=guiService.getAktuellerTabPane();
+			 Tab tab=pane.getSelectionModel().getSelectedItem();
+			 System.out.println(tab.getId());
+			 AnchorPane selectedBorderPane = (AnchorPane) tab.getContent();
+			System.out.println(selectedBorderPane);
+			 
+		 }
+		 //else System.out.println("  hier passiert was anderes");
+	 }
    	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+		guiService=GUIService.getInstance();
 		tabPane=new TabPane();
 				
 	}
