@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="anchorTabView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="1.0" minWidth="1.0" prefHeight="763.0" prefWidth="1024.0" style="-fx-background-color: blue;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.michael.stopper.views.tab.TabPresenter">
+   <children>
+      <ScrollPane fx:id="tabScrollPane" fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="1.0" minWidth="1.0" prefHeight="763.0" prefWidth="1024.0" vbarPolicy="NEVER">
+        <content>
+          <AnchorPane fx:id="anchorTab" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <TabPane fx:id="tabPane" prefHeight="770.0" prefWidth="1030.0" side="BOTTOM">
+                    <tabs>
+                      <Tab fx:id="blatt1" onCloseRequest="#closeRequest" text="Blatt 1">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                        </content>
+                      </Tab>
+                      <Tab fx:id="addTab" closable="false" onCloseRequest="#never" onClosed="#never" onSelectionChanged="#addNewTab" text="+">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                        </content>
+                      </Tab>
+                    </tabs>
+                  </TabPane>
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
