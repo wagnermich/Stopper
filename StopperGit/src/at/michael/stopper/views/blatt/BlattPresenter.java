@@ -1,6 +1,5 @@
 package at.michael.stopper.views.blatt;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -8,15 +7,19 @@ import java.util.ResourceBundle;
 import at.michael.stopper.handler.Inject;
 import at.michael.stopper.services.GUIService;
 import at.michael.stopper.views.main.MainPresenter;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 
 public class BlattPresenter implements Initializable{
 
@@ -27,6 +30,13 @@ public class BlattPresenter implements Initializable{
 	 @FXML
 	 private Tab blatt;
 	 
+	 @FXML
+	 private HBox blattHBox;
+	 
+	 //@FXML
+	 //private ListView<HBox> stackList;
+	 
+	 private BlattPresenter presenter;
 		 
 	 private MainPresenter mainPresenter;
 	 private TabPane tabPane;
@@ -68,40 +78,34 @@ public class BlattPresenter implements Initializable{
 	    }
 
 	    @FXML private void tabSelected() {
-	    	
-	    	zeige();
-	    	//tabPane=;
-	    	//mainPresenter.setAktuellerTab(tabPane.getSelectionModel().getSelectedItem());
-	    	
-	    	
+	    	 if(guiService.getAktuellerTabPane()!=null) {
+				 //TabPane pane=guiService.getAktuellerTabPane();
+				 //Tab tab=pane.getSelectionModel().getSelectedItem();
+				 guiService.setAktuellerTab(blatt);
+			 }
 	    }
 	    public Tab getNewTab(int index){
-			final Tab newTab=new Tab();
-			newTab.setId("blatt"+index);
-			newTab.setText("Blatt "+index);
-			newTab.setOnCloseRequest(e->{tabClosing(e);});
-			newTab.setOnSelectionChanged(e->{tabSelected();});
-			return newTab;
+			blatt.setId("blatt"+index);
+			blatt.setText("Blatt "+index);
+			blattHBox.setId("blattHbox"+index);
+	    	return blatt;
 	    }
+	    public HBox getAnchor() {
+	    	return this.blattHBox;
+	    }
+	   
 	    
 	    public void injectMainPresenter(MainPresenter main) {
 	    	this.mainPresenter=main;
-	    }
-	 public void zeige() {
-		 if(guiService.getAktuellerTabPane()!=null) {
-			 TabPane pane=guiService.getAktuellerTabPane();
-			 Tab tab=pane.getSelectionModel().getSelectedItem();
-			 System.out.println(tab.getId());
-			 AnchorPane selectedBorderPane = (AnchorPane) tab.getContent();
-			System.out.println(selectedBorderPane);
-			 
-		 }
-		 //else System.out.println("  hier passiert was anderes");
-	 }
+	    }	
+	    /*public void injectTab(ObservableList<AnchorPane> box) {
+	    	blattHBox.getChildren().addAll(box);
+	    }*/
    	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		guiService=GUIService.getInstance();
+		this.presenter=this;
 		tabPane=new TabPane();
 				
 	}

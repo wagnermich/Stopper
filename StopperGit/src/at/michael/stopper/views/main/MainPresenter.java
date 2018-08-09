@@ -1,5 +1,8 @@
 package at.michael.stopper.views.main;
 
+import java.util.Collection;
+import java.util.List;
+
 import at.michael.stopper.handler.Inject;
 import at.michael.stopper.services.GUIService;
 import at.michael.stopper.views.blatt.BlattPresenter;
@@ -8,6 +11,9 @@ import at.michael.stopper.views.slot.SlotPresenter;
 import at.michael.stopper.views.slot.SlotView;
 import at.michael.stopper.views.stoppung.StoppungPresenter;
 import at.michael.stopper.views.stoppung.StoppungView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -59,6 +65,7 @@ public class MainPresenter {
     
     private int tabCounter=1;  //Erstes Blatt heiﬂt 1
     private Tab aktuellerTab;
+    final ObservableMap<String,BlattPresenter> tabItems = FXCollections.observableHashMap();
 
     private void bindAnchors() {
     	//verankern(vBox);
@@ -109,6 +116,10 @@ public class MainPresenter {
 		tabPane.getTabs().add(1,blattPresenter.getNewTab(tabCounter++)); 
 		blattPresenter.setClosePolicy(tabPane,true); // Woher bist du? add = true delete = false
 		tabPane.getSelectionModel().select(1);
+		tabItems.put(blattPresenter.getBlatt().getId(), blattPresenter);
+		//blattPresenter.injectTab(stoppItems);
+		//blattPresenter.getBlatt(),(HBox)blattPresenter.getAnchor());
+		
    		
    }
    @FXML //Mouse click
@@ -118,18 +129,29 @@ public class MainPresenter {
    }
    @FXML	//No Event needed
    void newStop() {
-	   SlotView view=new SlotView();
-	   SlotPresenter presenter =(SlotPresenter) view.getPresenter();
-	   TabPane tempPane=guiService.getAktuellerTabPane();
+	   SlotView slot=new SlotView();
+	   SlotPresenter presenter =(SlotPresenter) slot.getPresenter();
+	   presenter.injectMainPresenter(this);
+	   BlattPresenter blattPresenter=tabItems.get(tabPane.getSelectionModel().getSelectedItem().getId());
+	   blattPresenter.getAnchor().getChildren().add(slot.getView());
+	   //System.out.println(blattPresenter.getAnchor());
+	   
+	   
+	   //stoppItems.addAll(tabCounter,(AnchorPane) slot.getView());
+	   
+	   //System.out.println(tabPane.getSelectionModel().getSelectedItem().getId());
+	   //TabPane tempPane=guiService.getAktuellerTabPane();
+	   //System.out.println(tempPane);
+	   //System.out.println(guiService.getAktuellerTab());
 	   //AnchorPane anchor=new AnchorPane();
 	   //anchor.setId("newView");
 	   //anchor.getChildren().add(view.getView());
 	   //HBox hbox=(HBox)stoppungPresenter.getAnchor();
-	   Tab tempTab=tempPane.getSelectionModel().getSelectedItem();
+	   //Tab tempTab=tempPane.getSelectionModel().getSelectedItem();
 	   //tempTab.setContent(view.getView());
-	   if(tempTab!=null)
+	   //if(tempTab!=null)
 		   ;//System.out.println(((Pane) tempTab.getContent()).getChildren().get(0));
-	   System.out.println(((WebView) tempTab.getContent()));
+	   //System.out.println(((WebView) tempTab.getContent()));
 	   
 	   //for(Node node : ((AnchorPane) tempTab.getContent()).getChildren())
 		//   System.out.println(node);
